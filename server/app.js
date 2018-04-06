@@ -4,6 +4,14 @@ const users = []
 
 io.on('connection', socket => {
 	console.log(`a client is connected`)
+	socket.broadcast.emit(
+		'message',
+		JSON.stringify({
+			type: 'ADD_MESSAGE',
+			message: data.message,
+			author: data.author
+		})
+	)
 
 	socket.on('message', message => {
 		console.log(`new message`)
@@ -16,6 +24,13 @@ io.on('connection', socket => {
 				users.push({ name: data.name, id: index + 1 })
 				console.log(`users`, users)
 				socket.broadcast.emit(
+					'message',
+					JSON.stringify({
+						type: 'USERS_LIST',
+						users
+					})
+				)
+				socket.emit(
 					'message',
 					JSON.stringify({
 						type: 'USERS_LIST',
